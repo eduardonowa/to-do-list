@@ -2,7 +2,7 @@ export default {
   '*.{ts,vue}': [
     'eslint --config .eslintrc.cjs --fix',
     'prettier --write',
-    'jest --findRelatedTests --passWithNoTests',
+    'jest --findRelatedTests --passWithNoTests --verbose',
   ],
   '*.{js,jsx,json,css,scss,md}': ['prettier --write'],
 };

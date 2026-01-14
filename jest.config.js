@@ -13,6 +13,7 @@ export default {
       },
     ],
   },
+  transformIgnorePatterns: ['node_modules/(?!(@vue|vue))'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
