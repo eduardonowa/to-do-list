@@ -1,4 +1,6 @@
-export default {
+import type { Config } from 'lint-staged';
+
+const config: Config = {
   '*.{ts,vue}': [
     'eslint --config .eslintrc.cjs --fix',
     'prettier --write',
@@ -6,3 +8,5 @@ export default {
   ],
   '*.{js,jsx,json,css,scss,md}': ['prettier --write'],
 };
+
+export default config;
