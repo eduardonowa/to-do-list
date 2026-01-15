@@ -1,3 +1,37 @@
+<template>
+  <Teleport to="body">
+    <Transition name="modal">
+      <div
+        v-if="isOpen"
+        class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+        @click="handleBackdropClick"
+      >
+        <div :class="['bg-bg-popup rounded-lg shadow-xl w-full', sizeClasses[size]]" @click.stop>
+          <div v-if="title" class="flex items-center justify-between p-6 border-b border-border">
+            <h2 class="text-xl font-semibold text-text-primary">{{ title }}</h2>
+            <button
+              class="text-text-secondary hover:text-text-primary transition-colors"
+              @click="emit('close')"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="p-6">
+            <slot />
+          </div>
+        </div>
+      </div>
+    </Transition>
+  </Teleport>
+</template>
+
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
 
@@ -48,40 +82,6 @@ const sizeClasses = {
   xl: 'max-w-4xl',
 };
 </script>
-
-<template>
-  <Teleport to="body">
-    <Transition name="modal">
-      <div
-        v-if="isOpen"
-        class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
-        @click="handleBackdropClick"
-      >
-        <div :class="['bg-bg-popup rounded-lg shadow-xl w-full', sizeClasses[size]]" @click.stop>
-          <div v-if="title" class="flex items-center justify-between p-6 border-b border-border">
-            <h2 class="text-xl font-semibold text-text-primary">{{ title }}</h2>
-            <button
-              class="text-text-secondary hover:text-text-primary transition-colors"
-              @click="emit('close')"
-            >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-          <div class="p-6">
-            <slot />
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </Teleport>
-</template>
 
 <style scoped>
 .modal-enter-active,

@@ -1,25 +1,3 @@
-<script setup lang="ts">
-interface IButtonProps {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-  disabled?: boolean;
-  type?: 'button' | 'submit' | 'reset';
-  fullWidth?: boolean;
-}
-
-withDefaults(defineProps<IButtonProps>(), {
-  variant: 'primary',
-  size: 'md',
-  disabled: false,
-  type: 'button',
-  fullWidth: false,
-});
-
-defineEmits<{
-  click: [event: MouseEvent];
-}>();
-</script>
-
 <template>
   <button
     :type="type"
@@ -50,3 +28,25 @@ defineEmits<{
     <slot />
   </button>
 </template>
+
+<script setup lang="ts">
+interface IButtonProps {
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  fullWidth?: boolean;
+}
+
+withDefaults(defineProps<IButtonProps>(), {
+  variant: 'primary',
+  size: 'md',
+  disabled: false,
+  type: 'button',
+  fullWidth: false,
+});
+
+defineEmits<{
+  click: [event: MouseEvent];
+}>();
+</script>

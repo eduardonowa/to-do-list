@@ -1,41 +1,3 @@
-<script setup lang="ts">
-import type { ITask } from '@/types';
-import { computed } from 'vue';
-
-interface ITaskCardProps {
-  task: ITask;
-}
-
-const props = defineProps<ITaskCardProps>();
-
-const emit = defineEmits<{
-  click: [task: ITask];
-  toggle: [task: ITask];
-  delete: [taskId: number];
-}>();
-
-const priorityColors = {
-  Low: 'bg-warren-solitude text-warren-storm-gray border-warren-gainsboro',
-  Medium: 'bg-warren-hint-of-red text-warren-mortar border-warren-metropole',
-  High: 'bg-warren-terracota/10 text-warren-terracota border-warren-terracota',
-};
-
-const categoryColors = {
-  Personal: 'bg-primary/10 text-primary',
-  Work: 'bg-warren-gold/10 text-warren-gold',
-  Study: 'bg-primary-light/10 text-primary-light',
-};
-
-const formattedDate = computed(() => {
-  if (!props.task.dueDate) return '';
-  return new Date(props.task.dueDate).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-});
-</script>
-
 <template>
   <div
     class="bg-bg-default border border-border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
@@ -109,3 +71,41 @@ const formattedDate = computed(() => {
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import type { ITask } from '@/types';
+import { computed } from 'vue';
+
+interface ITaskCardProps {
+  task: ITask;
+}
+
+const props = defineProps<ITaskCardProps>();
+
+const emit = defineEmits<{
+  click: [task: ITask];
+  toggle: [task: ITask];
+  delete: [taskId: number];
+}>();
+
+const priorityColors = {
+  Low: 'bg-warren-solitude text-warren-storm-gray border-warren-gainsboro',
+  Medium: 'bg-warren-hint-of-red text-warren-mortar border-warren-metropole',
+  High: 'bg-warren-terracota/10 text-warren-terracota border-warren-terracota',
+};
+
+const categoryColors = {
+  Personal: 'bg-primary/10 text-primary',
+  Work: 'bg-warren-gold/10 text-warren-gold',
+  Study: 'bg-primary-light/10 text-primary-light',
+};
+
+const formattedDate = computed(() => {
+  if (!props.task.dueDate) return '';
+  return new Date(props.task.dueDate).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+});
+</script>

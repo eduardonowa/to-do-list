@@ -1,35 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue';
-
-interface ISelectOption {
-  value: string | number;
-  label: string;
-}
-
-interface ISelectProps {
-  modelValue: string | number;
-  label?: string;
-  options: ISelectOption[];
-  error?: string;
-  required?: boolean;
-  disabled?: boolean;
-  placeholder?: string;
-}
-
-const props = withDefaults(defineProps<ISelectProps>(), {
-  required: false,
-  disabled: false,
-});
-
-const emit = defineEmits<{
-  'update:modelValue': [value: string | number];
-}>();
-
-const selectId = computed(() => `select-${Math.random().toString(36).substr(2, 9)}`);
-
-const hasError = computed(() => !!props.error);
-</script>
-
 <template>
   <div class="w-full">
     <label v-if="label" :for="selectId" class="block text-sm font-medium text-text-primary mb-1">
@@ -60,3 +28,35 @@ const hasError = computed(() => !!props.error);
     <p v-if="error" class="mt-1 text-sm text-warren-terracota">{{ error }}</p>
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+
+interface ISelectOption {
+  value: string | number;
+  label: string;
+}
+
+interface ISelectProps {
+  modelValue: string | number;
+  label?: string;
+  options: ISelectOption[];
+  error?: string;
+  required?: boolean;
+  disabled?: boolean;
+  placeholder?: string;
+}
+
+const props = withDefaults(defineProps<ISelectProps>(), {
+  required: false,
+  disabled: false,
+});
+
+const emit = defineEmits<{
+  'update:modelValue': [value: string | number];
+}>();
+
+const selectId = computed(() => `select-${Math.random().toString(36).substring(2, 11)}`);
+
+const hasError = computed(() => !!props.error);
+</script>

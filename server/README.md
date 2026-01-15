@@ -4,7 +4,7 @@ This folder contains the mock API server using JSON Server with JWT authenticati
 
 ## Files
 
-- `index.js` - Main server file with JWT authentication middleware
+- `index.ts` - Main server file with JWT authentication middleware
 - `db.json` - Database file with users and tasks
 
 ## Running the Server
@@ -17,6 +17,6 @@ The server will start on `http://localhost:3001`
 
 ## Configuration
 
-- **Port**: 3001 (configurable in `index.js`)
+- **Port**: 3001 (configurable in `index.ts`)
 - **JWT Secret**: Change `SECRET_KEY` in production
 - **Token Expiration**: 24 hours

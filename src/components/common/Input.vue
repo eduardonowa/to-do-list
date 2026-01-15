@@ -1,31 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue';
-
-interface IInputProps {
-  modelValue: string;
-  type?: 'text' | 'email' | 'password' | 'date' | 'number';
-  label?: string;
-  placeholder?: string;
-  error?: string;
-  required?: boolean;
-  disabled?: boolean;
-}
-
-const props = withDefaults(defineProps<IInputProps>(), {
-  type: 'text',
-  required: false,
-  disabled: false,
-});
-
-const emit = defineEmits<{
-  'update:modelValue': [value: string];
-}>();
-
-const inputId = computed(() => `input-${Math.random().toString(36).substr(2, 9)}`);
-
-const hasError = computed(() => !!props.error);
-</script>
-
 <template>
   <div class="w-full">
     <label v-if="label" :for="inputId" class="block text-sm font-medium text-text-primary mb-1">
@@ -50,6 +22,34 @@ const hasError = computed(() => !!props.error);
       ]"
       @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     />
-    <p v-if="error" class="mt-1 text-sm text-warren-terracota">{{ error }}</p>
+    <p v-if="error && error.trim()" class="mt-1 text-sm text-warren-terracota">{{ error }}</p>
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+
+interface IInputProps {
+  modelValue: string;
+  type?: 'text' | 'email' | 'password' | 'date' | 'number';
+  label?: string;
+  placeholder?: string;
+  error?: string;
+  required?: boolean;
+  disabled?: boolean;
+}
+
+const props = withDefaults(defineProps<IInputProps>(), {
+  type: 'text',
+  required: false,
+  disabled: false,
+});
+
+const emit = defineEmits<{
+  'update:modelValue': [value: string];
+}>();
+
+const inputId = computed(() => `input-${Math.random().toString(36).substring(2, 11)}`);
+
+const hasError = computed(() => !!props.error);
+</script>

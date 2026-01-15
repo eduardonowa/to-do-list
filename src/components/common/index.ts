@@ -3,3 +3,5 @@ export { default as Input } from './Input.vue';
 export { default as Textarea } from './Textarea.vue';
 export { default as Select } from './Select.vue';
 export { default as Modal } from './Modal.vue';
+export { default as Toast } from './Toast.vue';
+export { default as ToastContainer } from './ToastContainer.vue';
