@@ -1,31 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue';
-
-interface ITextareaProps {
-  modelValue: string;
-  label?: string;
-  placeholder?: string;
-  error?: string;
-  required?: boolean;
-  disabled?: boolean;
-  rows?: number;
-}
-
-const props = withDefaults(defineProps<ITextareaProps>(), {
-  required: false,
-  disabled: false,
-  rows: 4,
-});
-
-const emit = defineEmits<{
-  'update:modelValue': [value: string];
-}>();
-
-const textareaId = computed(() => `textarea-${Math.random().toString(36).substr(2, 9)}`);
-
-const hasError = computed(() => !!props.error);
-</script>
-
 <template>
   <div class="w-full">
     <label v-if="label" :for="textareaId" class="block text-sm font-medium text-text-primary mb-1">
@@ -53,3 +25,31 @@ const hasError = computed(() => !!props.error);
     <p v-if="error" class="mt-1 text-sm text-warren-terracota">{{ error }}</p>
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+
+interface ITextareaProps {
+  modelValue: string;
+  label?: string;
+  placeholder?: string;
+  error?: string;
+  required?: boolean;
+  disabled?: boolean;
+  rows?: number;
+}
+
+const props = withDefaults(defineProps<ITextareaProps>(), {
+  required: false,
+  disabled: false,
+  rows: 4,
+});
+
+const emit = defineEmits<{
+  'update:modelValue': [value: string];
+}>();
+
+const textareaId = computed(() => `textarea-${Math.random().toString(36).substring(2, 11)}`);
+
+const hasError = computed(() => !!props.error);
+</script>
