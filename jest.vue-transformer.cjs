@@ -38,10 +38,18 @@ module.exports = {
       tsconfig: {
         esModuleInterop: true,
         allowSyntheticDefaultImports: true,
+        module: 'commonjs',
       },
     });
 
-    return tsJestTransformer.process(code, filename, config, transformOptions);
+    const result = tsJestTransformer.process(code, filename, config, transformOptions);
+    
+    // Convert ES modules to CommonJS if needed
+    if (result && typeof result === 'string' && result.includes('export default')) {
+      return result.replace(/export default/g, 'module.exports =');
+    }
+    
+    return result;
   },
   getCacheKey() {
     return 'vue-transform';
