@@ -31,3 +31,9 @@ export const categories = computed(() => {
   const uniqueCategories = new Set(tasks.value.map(task => task.category));
   return Array.from(uniqueCategories);
 });
+
+export const getters = {
+  filteredTasks,
+  tasksByCategory,
+  categories,
+};

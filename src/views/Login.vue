@@ -5,6 +5,9 @@
     <div
       class="bg-bg-default rounded-none md:rounded-lg shadow-none md:shadow-lg p-4 md:p-8 w-full max-w-md md:max-w-md"
     >
+      <div class="flex justify-center">
+        <img src="@/assets/icons/bext-logo.svg" alt="Logo" class="w-[90px] h-[40px]" />
+      </div>
       <div class="text-center mb-8">
         <h1 class="text-3xl font-bold text-text-primary mb-2">Welcome Back</h1>
         <p class="text-text-secondary">Sign in to your account</p>
