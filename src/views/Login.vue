@@ -21,6 +21,7 @@
           placeholder="Enter your email"
           :error="emailError"
           required
+          @input="validateEmail"
         />
 
         <Input
@@ -30,27 +31,21 @@
           placeholder="Enter your password"
           :error="passwordError"
           required
+          @input="validatePassword"
         />
 
         <Button
           type="submit"
           variant="primary"
+          :loading="authStore.isLoading"
           :disabled="authStore.isLoading || !isFormValid"
           full-width
           class="w-full"
           @click.prevent="handleLogin"
         >
-          {{ authStore.isLoading ? 'Signing in...' : 'Sign In' }}
+          Sign In
         </Button>
       </form>
-
-      <div class="mt-6 text-center text-sm text-text-secondary">
-        <p>Demo credentials:</p>
-        <p class="mt-2 font-mono text-xs">
-          Email: user@example.com<br />
-          Password: password123
-        </p>
-      </div>
     </div>
   </div>
 </template>
@@ -68,16 +63,57 @@ const email = ref('');
 const password = ref('');
 const emailError = ref('');
 const passwordError = ref('');
+const emailTouched = ref(false);
+const passwordTouched = ref(false);
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MIN_PASSWORD_LENGTH = 6;
 
 const isValidEmail = computed(() => {
   return email.value.length > 0 && emailRegex.test(email.value);
 });
 
-const isFormValid = computed(() => {
-  return isValidEmail.value && password.value.length > 0;
+const isValidPassword = computed(() => {
+  return password.value.length >= MIN_PASSWORD_LENGTH;
 });
+
+const isFormValid = computed(() => {
+  return isValidEmail.value && isValidPassword.value;
+});
+
+const validateEmail = () => {
+  emailTouched.value = true;
+
+  // Only show error if user has started typing
+  if (!email.value.trim()) {
+    emailError.value = '';
+    return;
+  }
+
+  if (!emailRegex.test(email.value)) {
+    emailError.value = 'Please enter a valid email';
+    return;
+  }
+
+  emailError.value = '';
+};
+
+const validatePassword = () => {
+  passwordTouched.value = true;
+
+  // Only show error if user has started typing
+  if (!password.value) {
+    passwordError.value = '';
+    return;
+  }
+
+  if (password.value.length < MIN_PASSWORD_LENGTH) {
+    passwordError.value = `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+    return;
+  }
+
+  passwordError.value = '';
+};
 
 const validateForm = () => {
   emailError.value = '';
@@ -95,6 +131,11 @@ const validateForm = () => {
 
   if (!password.value) {
     passwordError.value = 'Password is required';
+    return false;
+  }
+
+  if (password.value.length < MIN_PASSWORD_LENGTH) {
+    passwordError.value = `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
     return false;
   }
 
