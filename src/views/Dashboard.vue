@@ -309,7 +309,7 @@ onMounted(async () => {
     if (tasksStore.error) {
       toastStore.showToast(tasksStore.error, 'error');
     }
-  } catch (error) {
+  } catch {
     toastStore.showToast('Failed to load tasks. Please refresh the page.', 'error');
   }
 });

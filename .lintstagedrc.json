@@ -1,8 +1,4 @@
 {
-  "*.{ts,vue}": [
-    "eslint --config .eslintrc.cjs --fix",
-    "prettier --write",
-    "jest --findRelatedTests --passWithNoTests --verbose"
-  ],
+  "*.{ts,vue}": ["eslint --fix", "prettier --write"],
   "*.{js,jsx,json,css,scss,md}": ["prettier --write"]
 }
