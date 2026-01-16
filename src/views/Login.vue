@@ -101,7 +101,7 @@ const validateForm = () => {
   return true;
 };
 
-const handleLogin = async (event?: Event) => {
+const handleLogin = async (event?: globalThis.Event) => {
   if (event) {
     event.preventDefault();
   }
