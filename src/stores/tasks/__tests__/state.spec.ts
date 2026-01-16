@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals';
-import { tasks, isLoading, error, selectedCategory, selectedPriority, state } from '../state';
+import { tasks, isLoading, error, selectedCategories, selectedPriorities, state } from '../state';
 
 describe('Tasks State', () => {
   it('should export tasks ref', () => {
@@ -14,12 +14,12 @@ describe('Tasks State', () => {
     expect(error).toBeDefined();
   });
 
-  it('should export selectedCategory ref', () => {
-    expect(selectedCategory).toBeDefined();
+  it('should export selectedCategories ref', () => {
+    expect(selectedCategories).toBeDefined();
   });
 
-  it('should export selectedPriority ref', () => {
-    expect(selectedPriority).toBeDefined();
+  it('should export selectedPriorities ref', () => {
+    expect(selectedPriorities).toBeDefined();
   });
 
   it('should export state object', () => {
@@ -27,7 +27,7 @@ describe('Tasks State', () => {
     expect(state).toHaveProperty('tasks');
     expect(state).toHaveProperty('isLoading');
     expect(state).toHaveProperty('error');
-    expect(state).toHaveProperty('selectedCategory');
-    expect(state).toHaveProperty('selectedPriority');
+    expect(state).toHaveProperty('selectedCategories');
+    expect(state).toHaveProperty('selectedPriorities');
   });
 });

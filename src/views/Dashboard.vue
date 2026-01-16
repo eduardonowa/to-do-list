@@ -32,26 +32,57 @@
             </Button>
           </div>
           <div class="flex flex-col md:flex-row gap-3 mt-2 md:mt-0">
-            <Select
-              :model-value="tasksStore.selectedCategory"
+            <MultiSelectDropdown
+              v-model="tasksStore.selectedCategories"
               label="Category"
               :options="categoryFilterOptions"
-              class="min-w-[150px]"
-              @update:model-value="value => tasksStore.setCategoryFilter(String(value))"
+              placeholder="All categories"
             />
-            <Select
-              :model-value="tasksStore.selectedPriority"
+            <MultiSelectDropdown
+              v-model="tasksStore.selectedPriorities"
               label="Priority"
               :options="priorityFilterOptions"
-              class="min-w-[150px]"
-              @update:model-value="value => tasksStore.setPriorityFilter(String(value))"
+              placeholder="All priorities"
             />
           </div>
         </div>
+
+        <!-- Active Filters -->
+        <div
+          v-if="tasksStore.hasActiveFilters"
+          class="flex flex-wrap items-center gap-2 pt-2 border-t border-border"
+        >
+          <span class="text-sm text-text-secondary mr-2">Active filters:</span>
+          <div
+            v-for="filter in tasksStore.activeFilters"
+            :key="`${filter.type}-${filter.value}`"
+            class="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 border border-primary/30 rounded-lg text-sm text-text-primary"
+          >
+            <span class="font-medium">{{ filter.label }}:</span>
+            <span>{{ filter.value }}</span>
+            <button
+              @click.stop="tasksStore.removeFilter(filter.type, filter.value)"
+              class="ml-1 text-text-secondary hover:text-text-primary transition-colors"
+              aria-label="Remove filter"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <Button variant="ghost" size="sm" class="text-sm" @click="tasksStore.resetFilters">
+            Clear all
+          </Button>
+        </div>
       </div>
 
-      <div v-if="tasksStore.isLoading" class="text-center py-12">
-        <p class="text-text-secondary">Loading tasks...</p>
+      <div v-if="tasksStore.isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <TaskCardSkeleton v-for="n in 6" :key="`skeleton-${n}`" />
       </div>
 
       <div v-else-if="tasksStore.error" class="text-center py-12">
@@ -69,6 +100,8 @@
           v-for="task in tasksStore.filteredTasks"
           :key="task.id"
           :task="task"
+          :is-deleting="tasksStore.isDeleting === task.id"
+          :is-toggling="tasksStore.isToggling === task.id"
           @click="openEditModal(task)"
           @toggle="handleToggleTask(task.id, !task.completed)"
           @edit="openEditModal(task)"
@@ -127,9 +160,20 @@
         />
 
         <div class="flex justify-end gap-3 pt-4">
-          <Button variant="ghost" type="button" @click="closeCreateModal">Cancel</Button>
-          <Button type="submit" variant="primary" :disabled="tasksStore.isLoading">
-            {{ tasksStore.isLoading ? 'Saving...' : isEditing ? 'Save Changes' : 'Save Task' }}
+          <Button
+            variant="ghost"
+            type="button"
+            :disabled="tasksStore.isCreating || tasksStore.isUpdating"
+            @click="closeCreateModal"
+            >Cancel</Button
+          >
+          <Button
+            type="submit"
+            variant="primary"
+            :loading="isEditing ? tasksStore.isUpdating : tasksStore.isCreating"
+            :disabled="tasksStore.isCreating || tasksStore.isUpdating"
+          >
+            {{ isEditing ? 'Save Changes' : 'Save Task' }}
           </Button>
         </div>
       </form>
@@ -144,8 +188,16 @@ import { useAuthStore } from '@/stores/auth';
 import { useTasksStore } from '@/stores/tasks';
 import { useToastStore } from '@/stores/toast';
 import type { ITaskFormData } from '@/types';
-import { Button, Input, Textarea, Select, Modal } from '@/components/common';
-import { TaskCard } from '@/components/tasks';
+import {
+  Button,
+  Input,
+  Textarea,
+  Select,
+  Modal,
+  MultiSelectDropdown,
+  TaskCardSkeleton,
+} from '@/components/common';
+import TaskCard from '@/components/TaskCard.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -176,6 +228,13 @@ const categoryOptions = [
   { value: 'Personal', label: 'Personal' },
   { value: 'Work', label: 'Work' },
   { value: 'Study', label: 'Study' },
+  { value: 'Health', label: 'Health' },
+  { value: 'Shopping', label: 'Shopping' },
+  { value: 'Finance', label: 'Finance' },
+  { value: 'Travel', label: 'Travel' },
+  { value: 'Family', label: 'Family' },
+  { value: 'Hobbies', label: 'Hobbies' },
+  { value: 'Other', label: 'Other' },
 ];
 
 const priorityOptions = [
@@ -185,16 +244,11 @@ const priorityOptions = [
 ];
 
 const categoryFilterOptions = computed(() => {
-  return [{ value: 'All', label: 'All' }].concat(
-    tasksStore.categories.map(category => ({
-      value: category,
-      label: category,
-    }))
-  );
+  // Use all available categories from options, not just from existing tasks
+  return categoryOptions;
 });
 
 const priorityFilterOptions = [
-  { value: 'All', label: 'All' },
   { value: 'Low', label: 'Low' },
   { value: 'Medium', label: 'Medium' },
   { value: 'High', label: 'High' },

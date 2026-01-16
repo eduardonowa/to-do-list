@@ -34,6 +34,10 @@ router.beforeEach((to, _from, next) => {
     toastStore.showToast('You need to be logged in to access this page', 'error');
     next({ name: 'Login' });
   } else if (to.name === 'Login' && token) {
+    toastStore.showToast(
+      'You are already logged in. Please logout first if you want to login with another user.',
+      'info'
+    );
     next({ name: 'Dashboard' });
   } else {
     next();

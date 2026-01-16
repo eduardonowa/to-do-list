@@ -5,9 +5,10 @@ import {
   updateTask,
   deleteTask,
   toggleTaskComplete,
-  setCategoryFilter,
-  setPriorityFilter,
+  toggleCategoryFilter,
+  togglePriorityFilter,
   resetFilters,
+  removeFilter,
   actions,
 } from '../actions';
 
@@ -32,16 +33,20 @@ describe('Tasks Actions', () => {
     expect(typeof toggleTaskComplete).toBe('function');
   });
 
-  it('should export setCategoryFilter function', () => {
-    expect(typeof setCategoryFilter).toBe('function');
+  it('should export toggleCategoryFilter function', () => {
+    expect(typeof toggleCategoryFilter).toBe('function');
   });
 
-  it('should export setPriorityFilter function', () => {
-    expect(typeof setPriorityFilter).toBe('function');
+  it('should export togglePriorityFilter function', () => {
+    expect(typeof togglePriorityFilter).toBe('function');
   });
 
   it('should export resetFilters function', () => {
     expect(typeof resetFilters).toBe('function');
+  });
+
+  it('should export removeFilter function', () => {
+    expect(typeof removeFilter).toBe('function');
   });
 
   it('should export actions object', () => {
@@ -51,8 +56,9 @@ describe('Tasks Actions', () => {
     expect(actions).toHaveProperty('updateTask');
     expect(actions).toHaveProperty('deleteTask');
     expect(actions).toHaveProperty('toggleTaskComplete');
-    expect(actions).toHaveProperty('setCategoryFilter');
-    expect(actions).toHaveProperty('setPriorityFilter');
+    expect(actions).toHaveProperty('toggleCategoryFilter');
+    expect(actions).toHaveProperty('togglePriorityFilter');
     expect(actions).toHaveProperty('resetFilters');
+    expect(actions).toHaveProperty('removeFilter');
   });
 });

@@ -1,5 +1,15 @@
 import { taskService } from '@/services/api';
-import { tasks, isLoading, error, selectedCategory, selectedPriority } from './state';
+import {
+  tasks,
+  isLoading,
+  error,
+  selectedCategories,
+  selectedPriorities,
+  isCreating,
+  isUpdating,
+  isDeleting,
+  isToggling,
+} from './state';
 import type { ITaskFormData } from '@/types';
 
 export const fetchTasks = async () => {
@@ -22,7 +32,7 @@ export const fetchTasks = async () => {
 };
 
 export const createTask = async (taskData: ITaskFormData) => {
-  isLoading.value = true;
+  isCreating.value = true;
   error.value = null;
 
   try {
@@ -39,12 +49,12 @@ export const createTask = async (taskData: ITaskFormData) => {
     }
     return { success: false, error: error.value };
   } finally {
-    isLoading.value = false;
+    isCreating.value = false;
   }
 };
 
 export const updateTask = async (id: number, taskData: Partial<ITaskFormData>) => {
-  isLoading.value = true;
+  isUpdating.value = true;
   error.value = null;
 
   try {
@@ -64,12 +74,12 @@ export const updateTask = async (id: number, taskData: Partial<ITaskFormData>) =
     }
     return { success: false, error: error.value };
   } finally {
-    isLoading.value = false;
+    isUpdating.value = false;
   }
 };
 
 export const deleteTask = async (id: number) => {
-  isLoading.value = true;
+  isDeleting.value = id;
   error.value = null;
 
   try {
@@ -86,12 +96,12 @@ export const deleteTask = async (id: number) => {
     }
     return { success: false, error: error.value };
   } finally {
-    isLoading.value = false;
+    isDeleting.value = null;
   }
 };
 
 export const toggleTaskComplete = async (id: number, completed: boolean) => {
-  isLoading.value = true;
+  isToggling.value = id;
   error.value = null;
 
   try {
@@ -111,21 +121,45 @@ export const toggleTaskComplete = async (id: number, completed: boolean) => {
     }
     return { success: false, error: error.value };
   } finally {
-    isLoading.value = false;
+    isToggling.value = null;
   }
 };
 
-export const setCategoryFilter = (category: string) => {
-  selectedCategory.value = category;
+export const toggleCategoryFilter = (category: string) => {
+  const index = selectedCategories.value.indexOf(category);
+  if (index > -1) {
+    selectedCategories.value.splice(index, 1);
+  } else {
+    selectedCategories.value.push(category);
+  }
 };
 
-export const setPriorityFilter = (priority: string) => {
-  selectedPriority.value = priority;
+export const togglePriorityFilter = (priority: string) => {
+  const index = selectedPriorities.value.indexOf(priority);
+  if (index > -1) {
+    selectedPriorities.value.splice(index, 1);
+  } else {
+    selectedPriorities.value.push(priority);
+  }
 };
 
 export const resetFilters = () => {
-  selectedCategory.value = 'All';
-  selectedPriority.value = 'All';
+  selectedCategories.value = [];
+  selectedPriorities.value = [];
+};
+
+export const removeFilter = (type: 'category' | 'priority', value: string) => {
+  if (type === 'category') {
+    const index = selectedCategories.value.indexOf(value);
+    if (index > -1) {
+      selectedCategories.value.splice(index, 1);
+    }
+  } else if (type === 'priority') {
+    const index = selectedPriorities.value.indexOf(value);
+    if (index > -1) {
+      selectedPriorities.value.splice(index, 1);
+    }
+  }
 };
 
 export const actions = {
@@ -134,7 +168,8 @@ export const actions = {
   updateTask,
   deleteTask,
   toggleTaskComplete,
-  setCategoryFilter,
-  setPriorityFilter,
+  toggleCategoryFilter,
+  togglePriorityFilter,
   resetFilters,
+  removeFilter,
 };

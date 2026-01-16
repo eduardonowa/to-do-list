@@ -4,13 +4,21 @@ import type { ITask } from '@/types';
 export const tasks = ref<ITask[]>([]);
 export const isLoading = ref(false);
 export const error = ref<string | null>(null);
-export const selectedCategory = ref<string>('All');
-export const selectedPriority = ref<string>('All');
+export const selectedCategories = ref<string[]>([]);
+export const selectedPriorities = ref<string[]>([]);
+export const isCreating = ref(false);
+export const isUpdating = ref(false);
+export const isDeleting = ref<number | null>(null);
+export const isToggling = ref<number | null>(null);
 
 export const state = {
   tasks,
   isLoading,
   error,
-  selectedCategory,
-  selectedPriority,
+  selectedCategories,
+  selectedPriorities,
+  isCreating,
+  isUpdating,
+  isDeleting,
+  isToggling,
 };

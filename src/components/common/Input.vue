@@ -21,7 +21,7 @@
           'border-border bg-bg-light text-text-secondary cursor-not-allowed': disabled,
         },
       ]"
-      @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      @input="handleInput"
     />
     <p v-if="error && error.trim()" class="mt-1 text-sm text-warren-terracota">{{ error }}</p>
   </div>
@@ -48,9 +48,16 @@ const props = withDefaults(defineProps<IInputProps>(), {
 
 const emit = defineEmits<{
   'update:modelValue': [value: string];
+  input: [event: Event];
 }>();
 
 const inputId = computed(() => `input-${Math.random().toString(36).substring(2, 11)}`);
 
 const hasError = computed(() => !!props.error);
+
+const handleInput = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  emit('update:modelValue', target.value);
+  emit('input', event);
+};
 </script>

@@ -15,9 +15,19 @@ const middlewares = jsonServer.defaults();
 
 const SECRET_KEY = process.env.JWT_SECRET ?? 'dev-secret-key';
 const PORT = Number(process.env.PORT) || 3001;
+const API_DELAY = Number(process.env.API_DELAY) || 4000;
 
 server.use(middlewares);
 server.use(jsonServer.bodyParser);
+
+// Add delay middleware for testing loaders
+server.use((req, res, next) => {
+  // Skip delay for static assets or if delay is 0
+  if (API_DELAY === 0 || req.path.startsWith('/_')) {
+    return next();
+  }
+  setTimeout(next, API_DELAY);
+});
 
 interface IDecodedToken extends JwtPayload {
   userId: number;
@@ -96,6 +106,26 @@ server.get('/tasks', (req, res) => {
 
 server.use(router);
 
-server.listen(PORT, () => {
-  console.log(`JSON Server is running on http://localhost:${PORT}`);
-});
+server
+  .listen(PORT, () => {
+    console.log(`JSON Server is running on http://localhost:${PORT}`);
+    if (API_DELAY > 0) {
+      console.log(`API Delay: ${API_DELAY}ms (configure via API_DELAY env variable)`);
+    }
+  })
+  .on('error', (err: NodeJS.ErrnoException) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`\n❌ Port ${PORT} is already in use.`);
+      console.error(`\nTo fix this, you can:`);
+      console.error(`1. Stop the process using port ${PORT}:`);
+      console.error(`   - Windows: netstat -ano | findstr :${PORT}`);
+      console.error(`   - Then: taskkill /PID <PID> /F`);
+      console.error(`   - Linux/Mac: lsof -ti:${PORT} | xargs kill -9`);
+      console.error(`\n2. Or use a different port by setting PORT environment variable:`);
+      console.error(`   PORT=3002 npm run api\n`);
+      process.exit(1);
+    } else {
+      console.error('Server error:', err);
+      process.exit(1);
+    }
+  });
