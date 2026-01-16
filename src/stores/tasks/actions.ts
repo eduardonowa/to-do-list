@@ -1,6 +1,6 @@
 import { taskService } from '@/services/api';
 import { tasks, isLoading, error, selectedCategory, selectedPriority } from './state';
-import type { ITask, ITaskFormData } from '@/types';
+import type { ITaskFormData } from '@/types';
 
 export const fetchTasks = async () => {
   isLoading.value = true;
@@ -9,7 +9,13 @@ export const fetchTasks = async () => {
   try {
     tasks.value = await taskService.getTasks();
   } catch (err: any) {
-    error.value = err.response?.data?.error || 'Failed to fetch tasks';
+    if (!err.response) {
+      error.value = 'Unable to reach the server. Please check your connection or try again later.';
+    } else if (err.response.status >= 500) {
+      error.value = 'We are having problems loading your tasks. Please try again in a few minutes.';
+    } else {
+      error.value = err.response?.data?.error || 'Failed to fetch tasks';
+    }
   } finally {
     isLoading.value = false;
   }
@@ -24,7 +30,13 @@ export const createTask = async (taskData: ITaskFormData) => {
     tasks.value.push(newTask);
     return { success: true, task: newTask };
   } catch (err: any) {
-    error.value = err.response?.data?.error || 'Failed to create task';
+    if (!err.response) {
+      error.value = 'Unable to reach the server. Please check your connection or try again later.';
+    } else if (err.response.status >= 500) {
+      error.value = 'We are having problems creating your task. Please try again in a few minutes.';
+    } else {
+      error.value = err.response?.data?.error || 'Failed to create task';
+    }
     return { success: false, error: error.value };
   } finally {
     isLoading.value = false;
@@ -43,7 +55,13 @@ export const updateTask = async (id: number, taskData: Partial<ITaskFormData>) =
     }
     return { success: true, task: updatedTask };
   } catch (err: any) {
-    error.value = err.response?.data?.error || 'Failed to update task';
+    if (!err.response) {
+      error.value = 'Unable to reach the server. Please check your connection or try again later.';
+    } else if (err.response.status >= 500) {
+      error.value = 'We are having problems updating your task. Please try again in a few minutes.';
+    } else {
+      error.value = err.response?.data?.error || 'Failed to update task';
+    }
     return { success: false, error: error.value };
   } finally {
     isLoading.value = false;
@@ -59,7 +77,13 @@ export const deleteTask = async (id: number) => {
     tasks.value = tasks.value.filter(task => task.id !== id);
     return { success: true };
   } catch (err: any) {
-    error.value = err.response?.data?.error || 'Failed to delete task';
+    if (!err.response) {
+      error.value = 'Unable to reach the server. Please check your connection or try again later.';
+    } else if (err.response.status >= 500) {
+      error.value = 'We are having problems deleting your task. Please try again in a few minutes.';
+    } else {
+      error.value = err.response?.data?.error || 'Failed to delete task';
+    }
     return { success: false, error: error.value };
   } finally {
     isLoading.value = false;
@@ -78,7 +102,13 @@ export const toggleTaskComplete = async (id: number, completed: boolean) => {
     }
     return { success: true, task: updatedTask };
   } catch (err: any) {
-    error.value = err.response?.data?.error || 'Failed to update task';
+    if (!err.response) {
+      error.value = 'Unable to reach the server. Please check your connection or try again later.';
+    } else if (err.response.status >= 500) {
+      error.value = 'We are having problems updating your task. Please try again in a few minutes.';
+    } else {
+      error.value = err.response?.data?.error || 'Failed to update task';
+    }
     return { success: false, error: error.value };
   } finally {
     isLoading.value = false;
@@ -91,4 +121,20 @@ export const setCategoryFilter = (category: string) => {
 
 export const setPriorityFilter = (priority: string) => {
   selectedPriority.value = priority;
+};
+
+export const resetFilters = () => {
+  selectedCategory.value = 'All';
+  selectedPriority.value = 'All';
+};
+
+export const actions = {
+  fetchTasks,
+  createTask,
+  updateTask,
+  deleteTask,
+  toggleTaskComplete,
+  setCategoryFilter,
+  setPriorityFilter,
+  resetFilters,
 };

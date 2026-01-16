@@ -11,26 +11,5 @@
       "password": "password456"
     }
   ],
-  "tasks": [
-    {
-      "title": "User 2",
-      "description": "",
-      "category": "Study",
-      "priority": "High",
-      "dueDate": "2026-02-04",
-      "completed": false,
-      "userId": 2,
-      "id": 1
-    },
-    {
-      "title": "aa",
-      "description": "bvb",
-      "category": "Personal",
-      "priority": "High",
-      "dueDate": "2026-02-04",
-      "completed": true,
-      "userId": 1,
-      "id": 2
-    }
-  ]
+  "tasks": []
 }

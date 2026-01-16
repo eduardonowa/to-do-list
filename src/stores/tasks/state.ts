@@ -6,3 +6,11 @@ export const isLoading = ref(false);
 export const error = ref<string | null>(null);
 export const selectedCategory = ref<string>('All');
 export const selectedPriority = ref<string>('All');
+
+export const state = {
+  tasks,
+  isLoading,
+  error,
+  selectedCategory,
+  selectedPriority,
+};
