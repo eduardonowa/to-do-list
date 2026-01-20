@@ -15,7 +15,7 @@ const middlewares = jsonServer.defaults();
 
 const SECRET_KEY = process.env.JWT_SECRET ?? 'dev-secret-key';
 const PORT = Number(process.env.PORT) || 3001;
-const API_DELAY = Number(process.env.API_DELAY) || 4000;
+const API_DELAY = Number(process.env.API_DELAY) || 1000;
 
 server.use(middlewares);
 server.use(jsonServer.bodyParser);
