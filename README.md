@@ -1,4 +1,4 @@
-# BextTeste
+# ToDo List
 
 Technical challenge built with Vue 3, Vite, Pinia and Tailwind CSS.
 
